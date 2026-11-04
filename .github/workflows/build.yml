@@ -1,0 +1,22 @@
+name: build
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'microsoft'
+      - name: unpack
+        run: unzip -q lazur-ready.zip -d proj
+      - name: build
+        working-directory: proj
+        run: |
+          chmod +x ./gradlew
+          ./gradlew build
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Artifacts
+          path: proj/build/libs/
